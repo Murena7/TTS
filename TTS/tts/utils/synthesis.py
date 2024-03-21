@@ -125,11 +125,13 @@ def synthesis(
     do_trim_silence=False,
     d_vector=None,
     language_id=None,
+    ssml=False,
 ):
     """Synthesize voice for the given text using Griffin-Lim vocoder or just compute output features to be passed to
     the vocoder model.
 
     Args:
+        ssml:
         model (TTS.tts.models):
             The TTS model to synthesize audio with.
 
@@ -191,7 +193,7 @@ def synthesis(
 
     # convert text to sequence of token IDs
     text_inputs = np.asarray(
-        model.tokenizer.text_to_ids(text, language=language_name),
+        model.tokenizer.text_to_ids(text, language=language_id, ssml=ssml),
         dtype=np.int32,
     )
     # pass tensors to backend

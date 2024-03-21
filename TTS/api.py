@@ -243,11 +243,13 @@ class TTS(nn.Module):
         emotion: str = None,
         speed: float = None,
         split_sentences: bool = True,
+        ssml=False,
         **kwargs,
     ):
         """Convert text to speech.
 
         Args:
+            ssml:
             text (str):
                 Input text to synthesize.
             speaker (str, optional):
@@ -283,6 +285,7 @@ class TTS(nn.Module):
             style_text=None,
             reference_speaker_name=None,
             split_sentences=split_sentences,
+            ssml=ssml,
             **kwargs,
         )
         return wav
@@ -298,11 +301,13 @@ class TTS(nn.Module):
         pipe_out=None,
         file_path: str = "output.wav",
         split_sentences: bool = True,
+        ssml=False,
         **kwargs,
     ):
         """Convert text to speech.
 
         Args:
+            ssml:
             text (str):
                 Input text to synthesize.
             speaker (str, optional):
@@ -337,6 +342,7 @@ class TTS(nn.Module):
             language=language,
             speaker_wav=speaker_wav,
             split_sentences=split_sentences,
+            ssml=ssml,
             **kwargs,
         )
         self.synthesizer.save_wav(wav=wav, path=file_path, pipe_out=pipe_out)

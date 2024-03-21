@@ -20,6 +20,7 @@ from TTS.utils.audio.numpy_transforms import save_wav
 from TTS.vc.models import setup_model as setup_vc_model
 from TTS.vocoder.models import setup_model as setup_vocoder_model
 from TTS.vocoder.utils.generic_utils import interpolate_vocoder_input
+from gruut import sentences
 
 
 class Synthesizer(nn.Module):
@@ -265,11 +266,13 @@ class Synthesizer(nn.Module):
         reference_wav=None,
         reference_speaker_name=None,
         split_sentences: bool = True,
+        ssml: bool = False,
         **kwargs,
     ) -> List[int]:
         """🐸 TTS magic. Run all the models and generate speech.
 
         Args:
+            ssml:
             text (str): input text.
             speaker_name (str, optional): speaker id for multi-speaker models. Defaults to "".
             language_name (str, optional): language id for multi-language models. Defaults to "".
@@ -293,9 +296,11 @@ class Synthesizer(nn.Module):
 
         if text:
             sens = [text]
-            if split_sentences:
+            if split_sentences and not ssml:
                 print(" > Text splitted to sentences.")
                 sens = self.split_into_sentences(text)
+            elif ssml:
+                sens = sentences(text, ssml=True, espeak=True)
             print(sens)
 
         # handle multi-speaker
@@ -406,6 +411,7 @@ class Synthesizer(nn.Module):
                         use_griffin_lim=use_gl,
                         d_vector=speaker_embedding,
                         language_id=language_id,
+                        ssml=ssml,
                     )
                 waveform = outputs["wav"]
                 if not use_gl:
